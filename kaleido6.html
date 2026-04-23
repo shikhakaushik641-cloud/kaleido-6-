@@ -1,0 +1,1462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KALEIDO-6 ✨ Magical Digital Book</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   CSS VARIABLES & RESET
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --pink:       #FFB6C1;
+  --pink-deep:  #FF8FAB;
+  --blue-soft:  #B5D8F7;
+  --blue-sky:   #D0EEFF;
+  --mint:       #AEFBD2;
+  --amber:      #FFD580;
+  --lime:       #BFFFA0;
+  --lavender:   #E0C8FF;
+  --white:      #FFFDF9;
+  --shadow-pk:  #d99ba4;
+  --shadow-pk2: #ffd1de;
+  --font-title: 'Fredoka One', cursive;
+  --font-body:  'Nunito', sans-serif;
+}
+
+html, body {
+  width: 100%; height: 100%;
+  overflow-x: hidden;
+  font-family: var(--font-body);
+}
+
+/* ============================================================
+   PAGE SYSTEM — two screens
+   ============================================================ */
+#landing-page, #dashboard-page {
+  width: 100%; min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+#dashboard-page { display: none; }
+
+/* ============================================================
+   CINEMATIC INTRO — fade + zoom portal
+   ============================================================ */
+#landing-page {
+  animation: portalOpen 1.8s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes portalOpen {
+  from { opacity: 0; transform: scale(.88); filter: blur(8px); }
+  to   { opacity: 1; transform: scale(1);  filter: blur(0);   }
+}
+
+/* ============================================================
+   BACKGROUND — pastel gradient
+   ============================================================ */
+.bg-gradient {
+  position: absolute; inset: 0;
+  background: linear-gradient(175deg, #ffd6e8 0%, #fce8f3 25%, #d8ecff 60%, #b5d8f7 100%);
+  z-index: 0;
+}
+
+/* ============================================================
+   BISCUIT MOUNTAINS — layered silhouettes (depth)
+   ============================================================ */
+.mountains {
+  position: absolute; bottom: 0; left: 0; width: 100%; height: 55%;
+  z-index: 1; pointer-events: none;
+}
+
+/* ============================================================
+   LOLLIPOP TREES — SVG layer
+   ============================================================ */
+.lollipop-layer {
+  position: absolute; bottom: 0; left: 0; width: 100%; height: 50%;
+  z-index: 2; pointer-events: none;
+}
+
+/* ============================================================
+   COTTON CANDY CLOUDS
+   ============================================================ */
+.cloud-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; }
+
+.cloud { position: absolute; will-change: transform; }
+.cloud svg { filter: drop-shadow(0 6px 18px rgba(255,182,193,.45)); }
+
+/* Each cloud drifts at its own speed */
+.cloud-1 { top:  8%; left: -20%; animation: driftCloud 22s linear infinite; }
+.cloud-2 { top: 15%; left: -30%; animation: driftCloud 30s 4s linear infinite; }
+.cloud-3 { top:  4%; left: -25%; animation: driftCloud 26s 10s linear infinite; }
+.cloud-4 { top: 22%; left: -35%; animation: driftCloud 34s 7s  linear infinite; }
+
+@keyframes driftCloud {
+  from { transform: translateX(0); }
+  to   { transform: translateX(130vw); }
+}
+
+/* ============================================================
+   HERO — SWEET CASTLE
+   ============================================================ */
+.castle-wrap {
+  position: absolute;
+  bottom: 18%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  will-change: transform;
+  animation: castleFloat 5s ease-in-out infinite;
+  filter: drop-shadow(0 30px 60px rgba(255,100,150,.35));
+}
+@keyframes castleFloat {
+  0%,100% { transform: translateX(-50%) translateY(0); }
+  50%      { transform: translateX(-50%) translateY(-18px); }
+}
+
+/* Soft glow pulse behind castle */
+.castle-glow {
+  position: absolute;
+  width: 340px; height: 140px;
+  background: radial-gradient(ellipse, rgba(255,192,220,.7) 0%, transparent 70%);
+  bottom: -20px; left: 50%; transform: translateX(-50%);
+  animation: glowPulse 3s ease-in-out infinite;
+  z-index: -1;
+}
+@keyframes glowPulse {
+  0%,100% { opacity: .6; transform: translateX(-50%) scaleX(1); }
+  50%      { opacity: 1;  transform: translateX(-50%) scaleX(1.12); }
+}
+
+/* ============================================================
+   GUMMY BEARS WITH FAIRY WINGS
+   ============================================================ */
+.gummy-layer { position: absolute; inset: 0; z-index: 12; pointer-events: none; }
+
+.gummy {
+  position: absolute;
+  animation-name: gummyFloat;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+.gummy-1 { left: 8%;  top: 35%; animation-duration: 7s;  animation-delay: 0s; }
+.gummy-2 { left: 78%; top: 28%; animation-duration: 9s;  animation-delay: 2s; }
+.gummy-3 { left: 62%; top: 50%; animation-duration: 6.5s;animation-delay: 4s; }
+.gummy-4 { left: 22%; top: 55%; animation-duration: 8s;  animation-delay: 1s; }
+
+@keyframes gummyFloat {
+  0%,100% { transform: translateY(0)   rotate(-4deg); }
+  33%      { transform: translateY(-20px) rotate(4deg); }
+  66%      { transform: translateY(-10px) rotate(-2deg); }
+}
+
+/* Wing shimmer */
+.wing { animation: wingFlap .5s ease-in-out infinite alternate; transform-origin: center; }
+@keyframes wingFlap {
+  from { transform: scaleY(1); }
+  to   { transform: scaleY(.75) scaleX(1.1); }
+}
+
+/* ============================================================
+   MAGIC FAIRIES + LIGHT TRAILS
+   ============================================================ */
+.fairy-layer { position: absolute; inset: 0; z-index: 13; pointer-events: none; }
+
+.fairy {
+  position: absolute;
+  animation-name: fairyOrbit;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  will-change: transform;
+  filter: drop-shadow(0 0 8px rgba(255,255,180,.95));
+}
+.fairy-1 { left: 30%; top: 20%; animation-duration: 10s; animation-delay: 0s; }
+.fairy-2 { left: 60%; top: 15%; animation-duration: 13s; animation-delay: 3s; }
+.fairy-3 { left: 50%; top: 38%; animation-duration: 9s;  animation-delay: 6s; }
+.fairy-4 { left: 18%; top: 18%; animation-duration: 11s; animation-delay: 1.5s; }
+.fairy-5 { left: 75%; top: 40%; animation-duration: 8s;  animation-delay: 5s; }
+
+@keyframes fairyOrbit {
+  0%   { transform: translate(0,0)    scale(1); }
+  25%  { transform: translate(30px,-25px) scale(1.1); }
+  50%  { transform: translate(55px,10px)  scale(.9); }
+  75%  { transform: translate(20px,30px)  scale(1.05); }
+  100% { transform: translate(0,0)    scale(1); }
+}
+
+/* Star trail behind fairies (CSS-only dots) */
+.fairy::after {
+  content: '✦ ✧ ✦';
+  font-size: 8px;
+  color: rgba(255,255,200,.8);
+  position: absolute;
+  left: -28px; top: 4px;
+  letter-spacing: 4px;
+  animation: trailFade 1.2s ease-in-out infinite;
+}
+@keyframes trailFade {
+  0%,100% { opacity: .8; }
+  50%      { opacity: .2; }
+}
+
+/* ============================================================
+   FLOATING STORYBOOKS WITH SPARKLES
+   ============================================================ */
+.book-layer { position: absolute; inset: 0; z-index: 11; pointer-events: none; }
+
+.storybook {
+  position: absolute;
+  animation-name: bookDrift;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  will-change: transform;
+  filter: drop-shadow(0 8px 24px rgba(180,100,200,.3));
+}
+.book-1 { left: 5%;  top: 22%; animation-duration: 8s;  animation-delay: 0s; }
+.book-2 { left: 82%; top: 30%; animation-duration: 10s; animation-delay: 3s; }
+.book-3 { left: 45%; top: 65%; animation-duration: 7s;  animation-delay: 5s; }
+
+@keyframes bookDrift {
+  0%,100% { transform: translateY(0)   rotate(-6deg); }
+  50%      { transform: translateY(-22px) rotate(6deg); }
+}
+
+/* Sparkle stars emerging from books */
+.sparkle-star {
+  position: absolute;
+  font-size: 14px;
+  pointer-events: none;
+  animation: sparkleRise 2.5s ease-in-out infinite;
+}
+.sparkle-star:nth-child(1) { animation-delay: 0s;   left:  10px; top: -5px; }
+.sparkle-star:nth-child(2) { animation-delay: .8s;  left: -5px;  top: -15px; font-size: 10px; }
+.sparkle-star:nth-child(3) { animation-delay: 1.5s; left:  25px; top: -12px; font-size: 11px; }
+@keyframes sparkleRise {
+  0%   { opacity: 0; transform: translateY(0) scale(.5); }
+  40%  { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-40px) scale(1.2); }
+}
+
+/* ============================================================
+   TITLE & CTA
+   ============================================================ */
+.hero-text {
+  position: absolute;
+  top: 5%; left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  text-align: center;
+  width: 90%;
+}
+.hero-text h1 {
+  font-family: var(--font-title);
+  font-size: clamp(3rem, 9vw, 6.5rem);
+  background: linear-gradient(135deg, #FF6BB3 0%, #FFB347 40%, #B87FFF 70%, #5BD1D7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: none;
+  filter: drop-shadow(0 4px 12px rgba(255,100,150,.4));
+  letter-spacing: 2px;
+  animation: titlePop 1s .5s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes titlePop {
+  from { opacity: 0; transform: scale(.6) rotate(-3deg); }
+  to   { opacity: 1; transform: scale(1)  rotate(0); }
+}
+.hero-text p {
+  font-size: clamp(.9rem, 2.5vw, 1.3rem);
+  color: #c0569e;
+  font-weight: 700;
+  margin-top: .5rem;
+  letter-spacing: 1px;
+  animation: fadeUp 1s 1s both;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.enter-btn {
+  margin-top: 1.8rem;
+  display: inline-block;
+  font-family: var(--font-title);
+  font-size: 1.4rem;
+  color: #fff;
+  background: linear-gradient(135deg, #FF6BB3, #FFB347);
+  border: none; border-radius: 60px;
+  padding: .75rem 2.5rem;
+  cursor: pointer;
+  box-shadow: 0 8px 30px rgba(255,100,150,.5), 0 2px 8px rgba(0,0,0,.1);
+  transition: transform .2s, box-shadow .2s;
+  animation: fadeUp 1s 1.4s both;
+  text-decoration: none;
+}
+.enter-btn:hover  { transform: translateY(-3px) scale(1.04); box-shadow: 0 16px 40px rgba(255,100,150,.55); }
+.enter-btn:active { transform: scale(.96); }
+
+/* ============================================================
+   SVG SPARKLE DUST TRAIL (Touch / Mouse)
+   ============================================================ */
+#sparkle-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ============================================================
+   FLOATING CANDY / SUGAR PARTICLES (ambient)
+   ============================================================ */
+.candy-particle {
+  position: absolute;
+  pointer-events: none;
+  z-index: 4;
+  animation: candySpin linear infinite;
+  will-change: transform;
+}
+@keyframes candySpin {
+  from { transform: translateY(0) rotate(0deg); opacity: 1; }
+  to   { transform: translateY(-110vh) rotate(720deg); opacity: 0; }
+}
+
+/* ============================================================
+   ====  DASHBOARD PAGE  ====
+   ============================================================ */
+#dashboard-page {
+  background: linear-gradient(160deg, #ffeef8 0%, #e8f7ff 100%);
+  min-height: 100vh;
+  padding: 0;
+}
+
+.dash-header {
+  text-align: center;
+  padding: 2.5rem 1rem 1rem;
+  position: relative;
+  z-index: 5;
+}
+.dash-header h2 {
+  font-family: var(--font-title);
+  font-size: clamp(2rem, 6vw, 4rem);
+  background: linear-gradient(135deg, #FF6BB3, #9B59F5);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 8px rgba(200,100,255,.3));
+}
+.dash-header p { color: #c26ab0; font-weight: 600; margin-top: .3rem; }
+
+.back-btn {
+  position: absolute; top: 1.5rem; left: 1.5rem;
+  font-family: var(--font-title);
+  font-size: 1rem;
+  background: #FFB6C1;
+  border: none; border-radius: 40px;
+  padding: .5rem 1.2rem;
+  cursor: pointer;
+  box-shadow: 6px 6px 18px #d99ba4, -6px -6px 18px #ffd1de;
+  transition: .2s;
+  color: #8a2060;
+}
+.back-btn:active { box-shadow: inset 6px 6px 18px #d99ba4, inset -6px -6px 18px #ffd1de; }
+
+/* ---- Subject Panels ---- */
+.panels-wrap {
+  display: flex;
+  gap: 1.4rem;
+  padding: 1.5rem 2rem 3rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 5;
+}
+
+.subject-panel {
+  width: 200px;
+  min-height: 340px;
+  border-radius: 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1rem 1.5rem;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+  animation: panelPop .7s cubic-bezier(.34,1.56,.64,1) both;
+  user-select: none;
+}
+.subject-panel:nth-child(1) { animation-delay: .1s; }
+.subject-panel:nth-child(2) { animation-delay: .2s; }
+.subject-panel:nth-child(3) { animation-delay: .3s; }
+.subject-panel:nth-child(4) { animation-delay: .4s; }
+
+@keyframes panelPop {
+  from { opacity: 0; transform: translateY(40px) scale(.85); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Neumorphic / Jelly style per subject */
+.panel-english {
+  background: #FFD6E8;
+  box-shadow: 14px 14px 40px #e8a0bc, -14px -14px 40px #fff0f7;
+  color: #a0295c;
+}
+.panel-science {
+  background: #CDFFCE;
+  box-shadow: 14px 14px 40px #8fd98f, -14px -14px 40px #efffef;
+  color: #1e7c1e;
+}
+.panel-math {
+  background: #C9E8FF;
+  box-shadow: 14px 14px 40px #88b8e0, -14px -14px 40px #eaf7ff;
+  color: #1a5fa0;
+}
+.panel-social {
+  background: #FFE9A0;
+  box-shadow: 14px 14px 40px #d4b84a, -14px -14px 40px #fff8d0;
+  color: #8c5e00;
+}
+
+.subject-panel:hover { transform: translateY(-8px) scale(1.03); }
+.subject-panel:active {
+  transform: scale(.95);
+}
+.subject-panel:active.panel-english { box-shadow: inset 14px 14px 40px #e8a0bc, inset -14px -14px 40px #fff0f7; }
+.subject-panel:active.panel-science { box-shadow: inset 14px 14px 40px #8fd98f, inset -14px -14px 40px #efffef; }
+.subject-panel:active.panel-math    { box-shadow: inset 14px 14px 40px #88b8e0, inset -14px -14px 40px #eaf7ff; }
+.subject-panel:active.panel-social  { box-shadow: inset 14px 14px 40px #d4b84a, inset -14px -14px 40px #fff8d0; }
+
+.panel-icon { font-size: 3.5rem; margin-bottom: .7rem; animation: iconBounce 2.5s ease-in-out infinite; }
+.subject-panel:nth-child(2) .panel-icon { animation-delay: .5s; }
+.subject-panel:nth-child(3) .panel-icon { animation-delay: 1s; }
+.subject-panel:nth-child(4) .panel-icon { animation-delay: 1.5s; }
+@keyframes iconBounce {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+
+.panel-title {
+  font-family: var(--font-title);
+  font-size: 1.5rem;
+  text-align: center;
+  margin-bottom: .5rem;
+}
+.panel-sub { font-size: .78rem; opacity: .75; font-weight: 600; text-align: center; }
+
+/* Shimmer decoration on panel */
+.subject-panel::before {
+  content: '';
+  position: absolute;
+  top: -40%; left: -40%;
+  width: 80%; height: 80%;
+  background: radial-gradient(circle, rgba(255,255,255,.5) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* ---- Chapter List (expandable) ---- */
+.chapter-list {
+  width: 100%;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .6s cubic-bezier(.34,1.56,.64,1);
+  margin-top: .8rem;
+}
+.chapter-list.open { max-height: 400px; }
+
+.chapter-item {
+  background: rgba(255,255,255,.55);
+  border-radius: 20px;
+  padding: .5rem .8rem;
+  margin: .4rem 0;
+  font-size: .82rem;
+  font-weight: 700;
+  text-align: left;
+  backdrop-filter: blur(4px);
+  animation: chapterPop .4s cubic-bezier(.34,1.56,.64,1) both;
+  cursor: pointer;
+  transition: transform .2s;
+  border: none;
+  width: 100%;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+}
+.chapter-item:hover { transform: scale(1.04); }
+.chapter-item:nth-child(1){ animation-delay:.05s;}
+.chapter-item:nth-child(2){ animation-delay:.1s;}
+.chapter-item:nth-child(3){ animation-delay:.15s;}
+.chapter-item:nth-child(4){ animation-delay:.2s;}
+.chapter-item:nth-child(5){ animation-delay:.25s;}
+@keyframes chapterPop {
+  from { opacity:0; transform:scale(.8) translateX(-10px); }
+  to   { opacity:1; transform:scale(1) translateX(0); }
+}
+
+/* Tick icon for chapters */
+.chapter-item::before { content: '🍬'; font-size: .9rem; }
+.panel-english  .chapter-item::before { content: '📖'; }
+.panel-science  .chapter-item::before { content: '🔬'; }
+.panel-math     .chapter-item::before { content: '🔢'; }
+.panel-social   .chapter-item::before { content: '🌍'; }
+
+/* ============================================================
+   FIREWORK / CRACKER BURST SYSTEM
+   ============================================================ */
+
+/* The cracker rocket rising */
+@keyframes rocketRise {
+  0%   { transform: translateY(0)   scaleY(1);   opacity: 1; }
+  80%  { transform: translateY(-55vh) scaleY(1.1); opacity: 1; }
+  100% { transform: translateY(-60vh) scaleY(0);   opacity: 0; }
+}
+
+/* Individual burst particle */
+@keyframes particleBurst {
+  0%   { transform: translate(0,0) scale(1);      opacity: 1; }
+  60%  { opacity: 1; }
+  100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+}
+
+/* Flash ring when cracker pops */
+@keyframes flashRing {
+  0%   { transform: translate(-50%,-50%) scale(0); opacity: .9; }
+  60%  { opacity: .5; }
+  100% { transform: translate(-50%,-50%) scale(3); opacity: 0; }
+}
+
+/* Cracker container (fixed, above everything) */
+#cracker-layer {
+  position: fixed; inset: 0;
+  pointer-events: none;
+  z-index: 10000;
+  overflow: hidden;
+}
+
+/* Launch button — floating rocket emoji in corner */
+#cracker-btn {
+  position: fixed;
+  bottom: 2rem; right: 2rem;
+  z-index: 10001;
+  font-size: 2.2rem;
+  background: linear-gradient(135deg, #FF6BB3, #FFB347);
+  border: none; border-radius: 50%;
+  width: 64px; height: 64px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 8px 28px rgba(255,100,150,.55);
+  animation: btnPulse 2s ease-in-out infinite;
+  transition: transform .2s;
+  line-height: 1;
+}
+#cracker-btn:hover  { transform: scale(1.12) rotate(-10deg); }
+#cracker-btn:active { transform: scale(.92); }
+@keyframes btnPulse {
+  0%,100% { box-shadow: 0 8px 28px rgba(255,100,150,.55); }
+  50%      { box-shadow: 0 8px 42px rgba(255,100,150,.85); }
+}
+
+/* Tooltip label */
+#cracker-btn::after {
+  content: 'Pop!';
+  position: absolute;
+  top: -2rem; left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Fredoka One', cursive;
+  font-size: .85rem;
+  color: #FF6BB3;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* ============================================================
+   DASHBOARD FLOATING DECOR
+   ============================================================ */
+.dash-decor {
+  position: fixed; pointer-events: none;
+  font-size: 1.8rem;
+  animation: dashFloat linear infinite;
+  opacity: .55;
+  z-index: 1;
+}
+@keyframes dashFloat {
+  0%   { transform: translateY(100vh) rotate(0deg);   opacity: 0; }
+  10%  { opacity: .55; }
+  90%  { opacity: .55; }
+  100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     SVG SPARKLE DUST CANVAS (over both pages)
+     ============================================================ -->
+<svg id="sparkle-canvas" xmlns="http://www.w3.org/2000/svg"></svg>
+
+<!-- Cracker / Firework Layer -->
+<div id="cracker-layer"></div>
+<!-- Cracker Launch Button -->
+<button id="cracker-btn" title="Launch Crackers!">🚀</button>
+
+<!-- ============================================================
+     LANDING PAGE
+     ============================================================ -->
+<div id="landing-page">
+
+  <!-- Background gradient -->
+  <div class="bg-gradient"></div>
+
+  <!-- Biscuit Mountains SVG -->
+  <svg class="mountains" viewBox="0 0 1440 400" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Far mountain (lightest, smallest) -->
+    <ellipse cx="720" cy="420" rx="900" ry="220" fill="#f5d5e8" opacity=".5"/>
+    <!-- Mid mountain -->
+    <path d="M0,380 Q180,180 360,260 Q540,340 720,200 Q900,60 1080,200 Q1260,340 1440,260 L1440,400 L0,400Z"
+          fill="#eec9dc" opacity=".65"/>
+    <!-- Biscuit crinkle detail -->
+    <path d="M0,370 Q120,330 240,355 Q360,380 480,345 Q600,310 720,340 Q840,370 960,340 Q1080,310 1200,345 Q1320,380 1440,355 L1440,400 L0,400Z"
+          fill="#f7d9e8" opacity=".8"/>
+    <!-- Front hill -->
+    <path d="M0,395 Q360,340 720,370 Q1080,400 1440,370 L1440,400 L0,400Z"
+          fill="#fce4f0" opacity="1"/>
+    <!-- Biscuit texture dots -->
+    <circle cx="350" cy="320" r="6" fill="#ffd6e8" opacity=".6"/>
+    <circle cx="700" cy="290" r="5" fill="#ffd6e8" opacity=".6"/>
+    <circle cx="1100" cy="305" r="7" fill="#ffd6e8" opacity=".6"/>
+  </svg>
+
+  <!-- Lollipop Trees SVG layer -->
+  <svg class="lollipop-layer" viewBox="0 0 1440 350" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Tree 1 - left -->
+    <rect x="68" y="240" width="10" height="80" rx="5" fill="#d4889a"/>
+    <circle cx="73" cy="210" r="42" fill="#FF8FAB" opacity=".85"/>
+    <circle cx="73" cy="210" r="30" fill="#FFB6C1" opacity=".7"/>
+    <circle cx="55" cy="200" r="7" fill="#fff" opacity=".5"/>
+    <!-- Spiral on lollipop -->
+    <circle cx="73" cy="210" r="15" fill="none" stroke="#ff6699" stroke-width="3" opacity=".5"/>
+
+    <!-- Tree 2 - left mid -->
+    <rect x="218" y="260" width="8" height="70" rx="4" fill="#aad4a0"/>
+    <circle cx="222" cy="232" r="34" fill="#BFFFA0" opacity=".85"/>
+    <circle cx="222" cy="232" r="22" fill="#d4ffbe" opacity=".6"/>
+    <circle cx="210" cy="224" r="5" fill="#fff" opacity=".5"/>
+
+    <!-- Tree 3 - right mid -->
+    <rect x="1198" y="255" width="9" height="75" rx="4" fill="#aab8d4"/>
+    <circle cx="1202" cy="222" r="38" fill="#B5D8F7" opacity=".85"/>
+    <circle cx="1202" cy="222" r="25" fill="#cce8ff" opacity=".6"/>
+    <circle cx="1188" cy="212" r="6" fill="#fff" opacity=".5"/>
+
+    <!-- Tree 4 - right -->
+    <rect x="1360" y="240" width="10" height="80" rx="5" fill="#d4c888"/>
+    <circle cx="1365" cy="208" r="40" fill="#FFD580" opacity=".85"/>
+    <circle cx="1365" cy="208" r="26" fill="#ffe9a0" opacity=".7"/>
+    <circle cx="1350" cy="198" r="6" fill="#fff" opacity=".5"/>
+
+    <!-- Small accent tree - far left -->
+    <rect x="140" y="270" width="6" height="55" rx="3" fill="#e0a8c8"/>
+    <circle cx="143" cy="248" r="26" fill="#E0C8FF" opacity=".8"/>
+
+    <!-- Small accent tree - far right -->
+    <rect x="1290" y="268" width="6" height="55" rx="3" fill="#c8d4e0"/>
+    <circle cx="1293" cy="246" r="25" fill="#B5D8F7" opacity=".8"/>
+  </svg>
+
+  <!-- Cotton Candy Clouds layer -->
+  <div class="cloud-layer" id="cloud-layer">
+    <!-- Cloud 1 -->
+    <div class="cloud cloud-1" data-depth="0.2">
+      <svg width="220" height="90" viewBox="0 0 220 90" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="110" cy="65" rx="100" ry="28" fill="#FFD6E8" opacity=".75"/>
+        <ellipse cx="70"  cy="52" rx="55"  ry="40" fill="#ffc2d9" opacity=".8"/>
+        <ellipse cx="130" cy="48" rx="60"  ry="45" fill="#FFD6E8" opacity=".8"/>
+        <ellipse cx="170" cy="55" rx="45"  ry="34" fill="#ffc2d9" opacity=".75"/>
+      </svg>
+    </div>
+    <!-- Cloud 2 (bigger) -->
+    <div class="cloud cloud-2" data-depth="0.35">
+      <svg width="290" height="110" viewBox="0 0 290 110" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="145" cy="82" rx="135" ry="30" fill="#d6eeff" opacity=".7"/>
+        <ellipse cx="90"  cy="65" rx="65"  ry="48" fill="#bddcff" opacity=".75"/>
+        <ellipse cx="165" cy="58" rx="75"  ry="56" fill="#d6eeff" opacity=".75"/>
+        <ellipse cx="225" cy="68" rx="58"  ry="42" fill="#bddcff" opacity=".7"/>
+      </svg>
+    </div>
+    <!-- Cloud 3 (small) -->
+    <div class="cloud cloud-3" data-depth="0.15">
+      <svg width="160" height="70" viewBox="0 0 160 70" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="80"  cy="52" rx="72"  ry="20" fill="#FFE4F2" opacity=".8"/>
+        <ellipse cx="52"  cy="40" rx="40"  ry="30" fill="#FFD6E8" opacity=".8"/>
+        <ellipse cx="100" cy="36" rx="45"  ry="34" fill="#FFE4F2" opacity=".8"/>
+        <ellipse cx="130" cy="44" rx="32"  ry="24" fill="#FFD6E8" opacity=".75"/>
+      </svg>
+    </div>
+    <!-- Cloud 4 -->
+    <div class="cloud cloud-4" data-depth="0.28">
+      <svg width="240" height="95" viewBox="0 0 240 95" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="120" cy="72" rx="110" ry="25" fill="#E0C8FF" opacity=".7"/>
+        <ellipse cx="80"  cy="58" rx="58"  ry="44" fill="#d4aaff" opacity=".75"/>
+        <ellipse cx="150" cy="52" rx="66"  ry="50" fill="#E0C8FF" opacity=".75"/>
+        <ellipse cx="200" cy="62" rx="50"  ry="36" fill="#d4aaff" opacity=".7"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Hero Text -->
+  <div class="hero-text">
+    <h1>KALEIDO-6</h1>
+    <p>✨ Your Magical Digital World of Learning ✨</p>
+    <button class="enter-btn" id="enter-btn">Open the Portal 🌈</button>
+  </div>
+
+  <!-- SWEET CASTLE (SVG) -->
+  <div class="castle-wrap" id="castle-wrap">
+    <div class="castle-glow"></div>
+    <svg width="340" height="300" viewBox="0 0 340 300" xmlns="http://www.w3.org/2000/svg">
+      <!-- Castle base / body -->
+      <rect x="70" y="160" width="200" height="120" rx="14" fill="#FFB6C1"/>
+      <rect x="70" y="160" width="200" height="120" rx="14" fill="url(#cakeStripe)" opacity=".5"/>
+
+      <!-- Cake stripes on body -->
+      <defs>
+        <pattern id="cakeStripe" patternUnits="userSpaceOnUse" width="12" height="12" patternTransform="rotate(45)">
+          <rect width="6" height="12" fill="rgba(255,255,255,.25)"/>
+        </pattern>
+        <radialGradient id="towerGrad" cx="50%" cy="30%" r="60%">
+          <stop offset="0%" stop-color="#fff0f5"/>
+          <stop offset="100%" stop-color="#FFB6C1"/>
+        </radialGradient>
+        <radialGradient id="roofGrad" cx="50%" cy="0%" r="100%">
+          <stop offset="0%" stop-color="#FF6BB3"/>
+          <stop offset="100%" stop-color="#FF8FAB"/>
+        </radialGradient>
+        <filter id="castleGlow">
+          <feGaussianBlur stdDeviation="4" result="blur"/>
+          <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+        </filter>
+      </defs>
+
+      <!-- Icing drip on body -->
+      <path d="M70,165 Q90,180 110,165 Q130,150 150,165 Q170,180 190,165 Q210,150 230,165 Q250,180 270,165 L270,175 Q250,195 230,180 Q210,165 190,180 Q170,195 150,180 Q130,165 110,180 Q90,195 70,180Z"
+            fill="white" opacity=".7"/>
+
+      <!-- Gate arch (door) -->
+      <path d="M150,280 L150,225 Q170,205 190,225 L190,280Z" fill="#FFD6E8"/>
+      <path d="M150,225 Q170,200 190,225" fill="none" stroke="#FF8FAB" stroke-width="3"/>
+      <!-- Gate candy-cane stripes -->
+      <path d="M153,245 L187,245" stroke="#FF6BB3" stroke-width="2.5" opacity=".5"/>
+      <path d="M153,258 L187,258" stroke="#FF6BB3" stroke-width="2.5" opacity=".5"/>
+
+      <!-- Windows -->
+      <rect x="90"  y="185" width="28" height="28" rx="14" fill="#ffe0f0"/>
+      <rect x="222" y="185" width="28" height="28" rx="14" fill="#ffe0f0"/>
+      <circle cx="104" cy="199" r="6" fill="#FF8FAB" opacity=".8"/>
+      <circle cx="236" cy="199" r="6" fill="#FF8FAB" opacity=".8"/>
+
+      <!-- Left tower -->
+      <rect x="55" y="130" width="55" height="90" rx="8" fill="url(#towerGrad)"/>
+      <!-- Left tower roof (cone) -->
+      <polygon points="82,75 35,130 130,130" fill="url(#roofGrad)"/>
+      <!-- Candy ball on left tower -->
+      <circle cx="82" cy="72" r="12" fill="#FFD580"/>
+      <circle cx="78" cy="68" r="4" fill="rgba(255,255,255,.5)"/>
+
+      <!-- Right tower -->
+      <rect x="230" y="130" width="55" height="90" rx="8" fill="url(#towerGrad)"/>
+      <!-- Right tower roof (cone) -->
+      <polygon points="257,75 210,130 305,130" fill="url(#roofGrad)"/>
+      <!-- Candy ball on right tower -->
+      <circle cx="257" cy="72" r="12" fill="#BFFFA0"/>
+      <circle cx="253" cy="68" r="4" fill="rgba(255,255,255,.5)"/>
+
+      <!-- Center tall tower -->
+      <rect x="135" y="100" width="70" height="100" rx="8" fill="url(#towerGrad)"/>
+      <!-- Center tower roof -->
+      <polygon points="170,38 118,100 222,100" fill="#FF6BB3"/>
+      <!-- Candy star on center tower -->
+      <text x="170" y="45" text-anchor="middle" font-size="22" fill="#FFD580">★</text>
+      <!-- Icing on center tower roof -->
+      <path d="M118,100 Q130,115 142,100 Q154,85 166,100 Q178,115 190,100 Q202,85 214,100 Q218,100 222,100" fill="white" opacity=".6"/>
+
+      <!-- Candy cane flag poles -->
+      <line x1="82"  y1="62" x2="82"  y2="40" stroke="#d4889a" stroke-width="2.5"/>
+      <polygon points="82,40 100,48 82,56" fill="#FF6BB3"/>
+      <line x1="257" y1="62" x2="257" y2="40" stroke="#aad4a0" stroke-width="2.5"/>
+      <polygon points="257,40 275,48 257,56" fill="#BFFFA0"/>
+
+      <!-- Macarons on base wall -->
+      <circle cx="100" cy="162" r="7" fill="#FFD580" stroke="#fff" stroke-width="1.5"/>
+      <circle cx="120" cy="162" r="7" fill="#FF8FAB" stroke="#fff" stroke-width="1.5"/>
+      <circle cx="220" cy="162" r="7" fill="#BFFFA0" stroke="#fff" stroke-width="1.5"/>
+      <circle cx="240" cy="162" r="7" fill="#E0C8FF" stroke="#fff" stroke-width="1.5"/>
+
+      <!-- Glow highlights on castle -->
+      <ellipse cx="170" cy="295" rx="130" ry="12" fill="rgba(255,150,200,.2)"/>
+    </svg>
+  </div>
+
+  <!-- Gummy Bears Layer -->
+  <div class="gummy-layer">
+    <!-- Gummy 1 (pink) -->
+    <div class="gummy gummy-1">
+      <svg width="54" height="70" viewBox="0 0 54 70" xmlns="http://www.w3.org/2000/svg">
+        <!-- Wings -->
+        <ellipse cx="7"  cy="25" rx="14" ry="9" fill="rgba(220,180,255,.65)" transform="rotate(-30 7 25)" class="wing"/>
+        <ellipse cx="47" cy="25" rx="14" ry="9" fill="rgba(220,180,255,.65)" transform="rotate(30 47 25)"  class="wing"/>
+        <!-- Body -->
+        <ellipse cx="27" cy="42" rx="16" ry="19" fill="#FF8FAB"/>
+        <!-- Head -->
+        <circle  cx="27" cy="22" r="15"           fill="#FF8FAB"/>
+        <!-- Ears -->
+        <circle  cx="16" cy="12" r="5"             fill="#FF6B9A"/>
+        <circle  cx="38" cy="12" r="5"             fill="#FF6B9A"/>
+        <!-- Eyes -->
+        <circle  cx="22" cy="21" r="3"             fill="#7a2050"/>
+        <circle  cx="32" cy="21" r="3"             fill="#7a2050"/>
+        <circle  cx="23" cy="20" r="1"             fill="white"/>
+        <circle  cx="33" cy="20" r="1"             fill="white"/>
+        <!-- Smile -->
+        <path d="M21,27 Q27,32 33,27" fill="none" stroke="#7a2050" stroke-width="1.5" stroke-linecap="round"/>
+        <!-- Belly shine -->
+        <ellipse cx="27" cy="40" rx="7" ry="9" fill="rgba(255,255,255,.2)"/>
+      </svg>
+    </div>
+    <!-- Gummy 2 (green) -->
+    <div class="gummy gummy-2">
+      <svg width="50" height="65" viewBox="0 0 50 65" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="6"  cy="23" rx="13" ry="8" fill="rgba(180,255,200,.65)" transform="rotate(-28 6 23)" class="wing"/>
+        <ellipse cx="44" cy="23" rx="13" ry="8" fill="rgba(180,255,200,.65)" transform="rotate(28 44 23)"  class="wing"/>
+        <ellipse cx="25" cy="40" rx="15" ry="18" fill="#7CDB7C"/>
+        <circle  cx="25" cy="21" r="14"           fill="#7CDB7C"/>
+        <circle  cx="15" cy="11" r="4.5"           fill="#5cb85c"/>
+        <circle  cx="35" cy="11" r="4.5"           fill="#5cb85c"/>
+        <circle  cx="21" cy="20" r="3"             fill="#1e5c1e"/>
+        <circle  cx="31" cy="20" r="3"             fill="#1e5c1e"/>
+        <circle  cx="22" cy="19" r="1"             fill="white"/>
+        <circle  cx="32" cy="19" r="1"             fill="white"/>
+        <path d="M19,26 Q25,31 31,26" fill="none" stroke="#1e5c1e" stroke-width="1.5" stroke-linecap="round"/>
+        <ellipse cx="25" cy="38" rx="6" ry="8" fill="rgba(255,255,255,.2)"/>
+      </svg>
+    </div>
+    <!-- Gummy 3 (blue) -->
+    <div class="gummy gummy-3">
+      <svg width="48" height="62" viewBox="0 0 48 62" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="6"  cy="22" rx="12" ry="7" fill="rgba(180,220,255,.65)" transform="rotate(-25 6 22)" class="wing"/>
+        <ellipse cx="42" cy="22" rx="12" ry="7" fill="rgba(180,220,255,.65)" transform="rotate(25 42 22)"  class="wing"/>
+        <ellipse cx="24" cy="38" rx="14" ry="17" fill="#5AADFF"/>
+        <circle  cx="24" cy="20" r="13"           fill="#5AADFF"/>
+        <circle  cx="14" cy="11" r="4"             fill="#2d8ad4"/>
+        <circle  cx="34" cy="11" r="4"             fill="#2d8ad4"/>
+        <circle  cx="20" cy="19" r="2.8"           fill="#1a4a80"/>
+        <circle  cx="30" cy="19" r="2.8"           fill="#1a4a80"/>
+        <circle  cx="21" cy="18" r="1"             fill="white"/>
+        <circle  cx="31" cy="18" r="1"             fill="white"/>
+        <path d="M18,25 Q24,30 30,25" fill="none" stroke="#1a4a80" stroke-width="1.5" stroke-linecap="round"/>
+        <ellipse cx="24" cy="37" rx="6" ry="8" fill="rgba(255,255,255,.2)"/>
+      </svg>
+    </div>
+    <!-- Gummy 4 (yellow) -->
+    <div class="gummy gummy-4">
+      <svg width="46" height="60" viewBox="0 0 46 60" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="5"  cy="21" rx="12" ry="7" fill="rgba(255,240,150,.65)" transform="rotate(-28 5 21)" class="wing"/>
+        <ellipse cx="41" cy="21" rx="12" ry="7" fill="rgba(255,240,150,.65)" transform="rotate(28 41 21)"  class="wing"/>
+        <ellipse cx="23" cy="37" rx="14" ry="17" fill="#FFD043"/>
+        <circle  cx="23" cy="19" r="13"           fill="#FFD043"/>
+        <circle  cx="13" cy="10" r="4"             fill="#e6a800"/>
+        <circle  cx="33" cy="10" r="4"             fill="#e6a800"/>
+        <circle  cx="19" cy="18" r="2.8"           fill="#7a5500"/>
+        <circle  cx="29" cy="18" r="2.8"           fill="#7a5500"/>
+        <circle  cx="20" cy="17" r="1"             fill="white"/>
+        <circle  cx="30" cy="17" r="1"             fill="white"/>
+        <path d="M17,24 Q23,29 29,24" fill="none" stroke="#7a5500" stroke-width="1.5" stroke-linecap="round"/>
+        <ellipse cx="23" cy="36" rx="6" ry="8" fill="rgba(255,255,255,.2)"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Magic Fairies Layer -->
+  <div class="fairy-layer">
+    <div class="fairy fairy-1">✨🧚</div>
+    <div class="fairy fairy-2">🧚✨</div>
+    <div class="fairy fairy-3">✨🧚‍♀️</div>
+    <div class="fairy fairy-4">🌟🧚</div>
+    <div class="fairy fairy-5">🧚‍♀️✨</div>
+  </div>
+
+  <!-- Floating Storybooks Layer -->
+  <div class="book-layer">
+    <!-- Book 1 -->
+    <div class="storybook book-1">
+      <svg width="72" height="60" viewBox="0 0 72 60" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2"  y="5" width="32" height="48" rx="4" fill="#E0C8FF" transform="rotate(-12 18 29)"/>
+        <rect x="38" y="5" width="32" height="48" rx="4" fill="#FFD6E8" transform="rotate(12 54 29)"/>
+        <rect x="28" y="8" width="16" height="44" rx="2" fill="#d4aaff"/>
+        <!-- Lines on pages -->
+        <line x1="8"  y1="20" x2="28" y2="20" stroke="rgba(130,80,200,.3)" stroke-width="1.5" transform="rotate(-12 18 29)"/>
+        <line x1="8"  y1="28" x2="28" y2="28" stroke="rgba(130,80,200,.3)" stroke-width="1.5" transform="rotate(-12 18 29)"/>
+        <line x1="44" y1="20" x2="64" y2="20" stroke="rgba(200,80,130,.3)" stroke-width="1.5" transform="rotate(12 54 29)"/>
+        <line x1="44" y1="28" x2="64" y2="28" stroke="rgba(200,80,130,.3)" stroke-width="1.5" transform="rotate(12 54 29)"/>
+      </svg>
+      <span class="sparkle-star">⭐</span>
+      <span class="sparkle-star">✨</span>
+      <span class="sparkle-star">🌟</span>
+    </div>
+    <!-- Book 2 -->
+    <div class="storybook book-2">
+      <svg width="65" height="55" viewBox="0 0 65 55" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2"  y="4" width="29" height="44" rx="4" fill="#BFFFA0" transform="rotate(-10 16 26)"/>
+        <rect x="34" y="4" width="29" height="44" rx="4" fill="#FFE9A0" transform="rotate(10 49 26)"/>
+        <rect x="25" y="7" width="14" height="40" rx="2" fill="#90d870"/>
+        <line x1="6"  y1="18" x2="24" y2="18" stroke="rgba(60,140,30,.3)" stroke-width="1.5" transform="rotate(-10 16 26)"/>
+        <line x1="6"  y1="26" x2="24" y2="26" stroke="rgba(60,140,30,.3)" stroke-width="1.5" transform="rotate(-10 16 26)"/>
+      </svg>
+      <span class="sparkle-star">✦</span>
+      <span class="sparkle-star">⭐</span>
+      <span class="sparkle-star">✨</span>
+    </div>
+    <!-- Book 3 -->
+    <div class="storybook book-3">
+      <svg width="68" height="58" viewBox="0 0 68 58" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2"  y="5" width="30" height="46" rx="4" fill="#C9E8FF" transform="rotate(-14 17 28)"/>
+        <rect x="36" y="5" width="30" height="46" rx="4" fill="#FFB6C1" transform="rotate(14 51 28)"/>
+        <rect x="27" y="8" width="14" height="42" rx="2" fill="#88b8e0"/>
+        <line x1="6"  y1="20" x2="26" y2="20" stroke="rgba(30,80,160,.3)" stroke-width="1.5" transform="rotate(-14 17 28)"/>
+        <line x1="6"  y1="29" x2="26" y2="29" stroke="rgba(30,80,160,.3)" stroke-width="1.5" transform="rotate(-14 17 28)"/>
+      </svg>
+      <span class="sparkle-star">🌟</span>
+      <span class="sparkle-star">✦</span>
+      <span class="sparkle-star">⭐</span>
+    </div>
+  </div>
+
+  <!-- Ambient floating candy particles (JS will add these dynamically) -->
+</div><!-- end #landing-page -->
+
+
+<!-- ============================================================
+     DASHBOARD PAGE
+     ============================================================ -->
+<div id="dashboard-page">
+  <div class="dash-header">
+    <button class="back-btn" id="back-btn">← Back</button>
+    <h2>📚 KALEIDO-6 Subjects</h2>
+    <p>Tap a subject to explore chapters! ✨</p>
+  </div>
+
+  <div class="panels-wrap">
+
+    <!-- English Panel -->
+    <div class="subject-panel panel-english" id="panel-english">
+      <div class="panel-icon">📖</div>
+      <div class="panel-title">English</div>
+      <div class="panel-sub">Stories · Grammar · Poetry</div>
+      <div class="chapter-list" id="chapters-english">
+        <button class="chapter-item">Chapter 1: The Enchanted Letter</button>
+        <button class="chapter-item">Chapter 2: Poem Garden</button>
+        <button class="chapter-item">Chapter 3: Story Weaver</button>
+        <button class="chapter-item">Chapter 4: Grammar Castle</button>
+        <button class="chapter-item">Chapter 5: Word Fairy Tales</button>
+      </div>
+    </div>
+
+    <!-- Science Panel -->
+    <div class="subject-panel panel-science" id="panel-science">
+      <div class="panel-icon">🔬</div>
+      <div class="panel-title">Science</div>
+      <div class="panel-sub">Nature · Experiments · Space</div>
+      <div class="chapter-list" id="chapters-science">
+        <button class="chapter-item">Chapter 1: Magic of Plants</button>
+        <button class="chapter-item">Chapter 2: Stars & Planets</button>
+        <button class="chapter-item">Chapter 3: Water Wonders</button>
+        <button class="chapter-item">Chapter 4: Animal Kingdom</button>
+        <button class="chapter-item">Chapter 5: Mini Lab Fun</button>
+      </div>
+    </div>
+
+    <!-- Math Panel -->
+    <div class="subject-panel panel-math" id="panel-math">
+      <div class="panel-icon">🔢</div>
+      <div class="panel-title">Math</div>
+      <div class="panel-sub">Numbers · Shapes · Logic</div>
+      <div class="chapter-list" id="chapters-math">
+        <button class="chapter-item">Chapter 1: Number Candy Land</button>
+        <button class="chapter-item">Chapter 2: Shape Fairy Gardens</button>
+        <button class="chapter-item">Chapter 3: Fraction Feast</button>
+        <button class="chapter-item">Chapter 4: Times Table Tower</button>
+        <button class="chapter-item">Chapter 5: Puzzle Palace</button>
+      </div>
+    </div>
+
+    <!-- Social Science Panel -->
+    <div class="subject-panel panel-social" id="panel-social">
+      <div class="panel-icon">🌍</div>
+      <div class="panel-title">Social</div>
+      <div class="panel-sub">History · Civics · Maps</div>
+      <div class="chapter-list" id="chapters-social">
+        <button class="chapter-item">Chapter 1: Our Magical India</button>
+        <button class="chapter-item">Chapter 2: Map Adventures</button>
+        <button class="chapter-item">Chapter 3: Ancient Kingdoms</button>
+        <button class="chapter-item">Chapter 4: Community Heroes</button>
+        <button class="chapter-item">Chapter 5: Earth & Resources</button>
+      </div>
+    </div>
+
+  </div>
+</div><!-- end #dashboard-page -->
+
+
+<script>
+/* ============================================================
+   JAVASCRIPT — KALEIDO-6
+   ============================================================ */
+
+/* ---- 1. Page switching ---- */
+const landingPage   = document.getElementById('landing-page');
+const dashboardPage = document.getElementById('dashboard-page');
+const enterBtn      = document.getElementById('enter-btn');
+const backBtn       = document.getElementById('back-btn');
+
+enterBtn.addEventListener('click', () => {
+  landingPage.style.display   = 'none';
+  dashboardPage.style.display = 'block';
+  dashboardPage.style.animation = 'portalOpen .9s cubic-bezier(.22,1,.36,1) both';
+  spawnDashDecor();
+});
+
+backBtn.addEventListener('click', () => {
+  dashboardPage.style.display = 'none';
+  landingPage.style.display   = 'block';
+  landingPage.style.animation = 'portalOpen .9s cubic-bezier(.22,1,.36,1) both';
+});
+
+/* ---- 2. Dashboard — panel click → chapter expand ---- */
+const panels = document.querySelectorAll('.subject-panel');
+
+panels.forEach(panel => {
+  panel.addEventListener('click', () => {
+    const id   = panel.id.replace('panel-', '');
+    const list = document.getElementById('chapters-' + id);
+    if (!list) return;
+
+    const isOpen = list.classList.contains('open');
+
+    // Close all others
+    document.querySelectorAll('.chapter-list').forEach(l => l.classList.remove('open'));
+
+    // Toggle clicked one
+    if (!isOpen) {
+      list.classList.add('open');
+      // Re-trigger animations on chapter items
+      list.querySelectorAll('.chapter-item').forEach((item, i) => {
+        item.style.animation = 'none';
+        item.offsetHeight; // reflow
+        item.style.animation = '';
+        item.style.animationDelay = (i * 0.05) + 's';
+      });
+    }
+  });
+});
+
+/* ---- 3. Ambient candy particles (landing page) ---- */
+const CANDY_EMOJIS = ['🍬','🍭','🍡','🎀','⭐','🌟','✨','🦋','🌸','🍦'];
+
+function spawnCandyParticle() {
+  const el = document.createElement('div');
+  el.className = 'candy-particle';
+  el.textContent = CANDY_EMOJIS[Math.floor(Math.random() * CANDY_EMOJIS.length)];
+  el.style.left     = Math.random() * 100 + 'vw';
+  el.style.bottom   = '-40px';
+  el.style.fontSize = (12 + Math.random() * 16) + 'px';
+  el.style.animationDuration = (8 + Math.random() * 12) + 's';
+  el.style.animationDelay   = '0s';
+  el.style.opacity = (.4 + Math.random() * .5).toString();
+  landingPage.appendChild(el);
+  setTimeout(() => el.remove(), 22000);
+}
+
+// Spawn particles periodically on landing page
+setInterval(() => {
+  if (landingPage.style.display !== 'none') spawnCandyParticle();
+}, 700);
+
+// Initial burst
+for (let i = 0; i < 6; i++) setTimeout(spawnCandyParticle, i * 300);
+
+/* ---- 4. SVG Sparkle Dust Trail (touch & mouse) ---- */
+const sparkleCanvas = document.getElementById('sparkle-canvas');
+const NS = 'http://www.w3.org/2000/svg';
+const STAR_SHAPES = ['★','✦','⬟','✿','◆'];
+const STAR_COLORS = ['#FFD700','#FF69B4','#9B59F5','#7FFFFF','#FF6BB3','#BFFFA0'];
+
+function createSparkle(x, y) {
+  const text = document.createElementNS(NS, 'text');
+  text.setAttribute('x', x + (Math.random() * 24 - 12));
+  text.setAttribute('y', y + (Math.random() * 24 - 12));
+  text.setAttribute('font-size', 10 + Math.random() * 14);
+  text.setAttribute('fill', STAR_COLORS[Math.floor(Math.random() * STAR_COLORS.length)]);
+  text.setAttribute('text-anchor', 'middle');
+  text.setAttribute('dominant-baseline', 'middle');
+  text.setAttribute('opacity', '1');
+  text.textContent = STAR_SHAPES[Math.floor(Math.random() * STAR_SHAPES.length)];
+  sparkleCanvas.appendChild(text);
+
+  // Animate: float up + fade
+  const dy    = -(20 + Math.random() * 35);
+  const dx    = (Math.random() * 30 - 15);
+  const start = performance.now();
+  const dur   = 800 + Math.random() * 600;
+
+  function step(now) {
+    const t  = Math.min((now - start) / dur, 1);
+    const op = 1 - t;
+    text.setAttribute('opacity', op.toFixed(2));
+    text.setAttribute('x', parseFloat(text.getAttribute('x')) + dx * .02);
+    text.setAttribute('y', parseFloat(text.getAttribute('y')) + dy * .02);
+    if (t < 1) requestAnimationFrame(step);
+    else       text.remove();
+  }
+  requestAnimationFrame(step);
+}
+
+let lastSparkle = 0;
+function handlePointer(x, y) {
+  const now = Date.now();
+  if (now - lastSparkle < 40) return; // throttle
+  lastSparkle = now;
+  for (let i = 0; i < 3; i++) createSparkle(x, y);
+}
+
+// Touch events (tablet)
+document.addEventListener('touchstart', e => {
+  Array.from(e.touches).forEach(t => handlePointer(t.clientX, t.clientY));
+}, { passive: true });
+document.addEventListener('touchmove', e => {
+  Array.from(e.touches).forEach(t => handlePointer(t.clientX, t.clientY));
+}, { passive: true });
+
+// Mouse fallback (desktop)
+document.addEventListener('mousemove', e => handlePointer(e.clientX, e.clientY));
+
+/* ---- 5. Device Orientation Parallax ---- */
+/*
+   On tablets, tilt creates a parallax shift on clouds,
+   castle, gummy bears, etc. using data-depth attributes.
+*/
+const cloudEls   = document.querySelectorAll('.cloud');
+const castleWrap = document.getElementById('castle-wrap');
+const gummyEls   = document.querySelectorAll('.gummy');
+const fairyEls   = document.querySelectorAll('.fairy');
+
+let gyroEnabled = false;
+
+function applyParallax(tiltX, tiltY) {
+  // tiltX: -1..1  tiltY: -1..1  (normalized)
+  const maxPx = 40;
+
+  cloudEls.forEach(cloud => {
+    const depth = parseFloat(cloud.dataset.depth || 0.2);
+    cloud.style.transform = `translate(${tiltX * maxPx * depth}px, ${tiltY * maxPx * depth}px)`;
+  });
+
+  if (castleWrap) {
+    castleWrap.style.transform = `translateX(calc(-50% + ${tiltX * maxPx * 0.5}px)) translateY(${tiltY * maxPx * 0.3}px)`;
+  }
+
+  gummyEls.forEach((g, i) => {
+    const depth = 0.3 + i * 0.1;
+    g.style.transform += ` translate(${tiltX * maxPx * depth}px, ${tiltY * maxPx * depth}px)`;
+  });
+
+  fairyEls.forEach((f, i) => {
+    const depth = 0.6 + i * 0.08;
+    f.style.transform += ` translate(${tiltX * maxPx * depth}px, ${tiltY * maxPx * depth}px)`;
+  });
+}
+
+window.addEventListener('deviceorientation', e => {
+  if (!gyroEnabled) gyroEnabled = true;
+  // gamma: left-right tilt (-90..90), beta: front-back (-180..180)
+  const tiltX = Math.max(-1, Math.min(1, (e.gamma || 0) / 30));
+  const tiltY = Math.max(-1, Math.min(1, ((e.beta  || 0) - 30) / 30));
+  applyParallax(tiltX, tiltY);
+}, { passive: true });
+
+// Request permission for iOS 13+
+if (typeof DeviceOrientationEvent !== 'undefined' &&
+    typeof DeviceOrientationEvent.requestPermission === 'function') {
+  enterBtn.addEventListener('click', () => {
+    DeviceOrientationEvent.requestPermission().catch(() => {});
+  }, { once: true });
+}
+
+/* ---- 6. Mouse parallax fallback (desktop) ---- */
+document.addEventListener('mousemove', e => {
+  if (gyroEnabled) return; // don't compete with gyro
+  const cx = window.innerWidth  / 2;
+  const cy = window.innerHeight / 2;
+  const tiltX = (e.clientX - cx) / cx;
+  const tiltY = (e.clientY - cy) / cy;
+  applyParallax(tiltX * .5, tiltY * .5);
+});
+
+/* ---- 7. Dashboard floating decor emojis ---- */
+const DASH_EMOJIS = ['🌸','🍬','🌟','✨','🦋','🍭','🌈','💫'];
+function spawnDashDecor() {
+  for (let i = 0; i < 8; i++) {
+    const el = document.createElement('div');
+    el.className = 'dash-decor';
+    el.textContent = DASH_EMOJIS[i % DASH_EMOJIS.length];
+    el.style.left   = (8 + i * 12) + '%';
+    el.style.animationDuration = (10 + Math.random() * 10) + 's';
+    el.style.animationDelay   = (Math.random() * 5) + 's';
+    el.style.fontSize = (1.2 + Math.random() * .8) + 'rem';
+    dashboardPage.appendChild(el);
+  }
+}
+
+/* ---- 8. Castle enter-btn sparkle burst ---- */
+enterBtn.addEventListener('mouseenter', () => {
+  const rect = enterBtn.getBoundingClientRect();
+  const cx   = rect.left + rect.width  / 2;
+  const cy   = rect.top  + rect.height / 2;
+  for (let i = 0; i < 10; i++) {
+    setTimeout(() => createSparkle(cx + Math.random() * 80 - 40, cy + Math.random() * 30 - 15), i * 60);
+  }
+});
+
+/* ---- 9. CRACKER / FIREWORK SYSTEM WITH WEB AUDIO SOUND ---- */
+
+// Web Audio context (created on first user gesture)
+let audioCtx = null;
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+
+/* --- Sound: Rocket whoosh (rising tone) --- */
+function playWhoosh() {
+  try {
+    const ctx = getAudioCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(120, ctx.currentTime);
+    osc.frequency.linearRampToValueAtTime(900, ctx.currentTime + 0.55);
+    gain.gain.setValueAtTime(0.18, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.55);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.55);
+  } catch(e) {}
+}
+
+/* --- Sound: Cracker BANG (noise burst) --- */
+function playBang(volume = 0.5) {
+  try {
+    const ctx = getAudioCtx();
+    const bufSize = ctx.sampleRate * 0.18;
+    const buf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < bufSize; i++) data[i] = (Math.random() * 2 - 1);
+
+    const src  = ctx.createBufferSource();
+    const gain = ctx.createGain();
+    const lpf  = ctx.createBiquadFilter();
+
+    src.buffer = buf;
+    lpf.type = 'lowpass';
+    lpf.frequency.value = 2000;
+
+    src.connect(lpf); lpf.connect(gain); gain.connect(ctx.destination);
+    gain.gain.setValueAtTime(volume, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.28);
+    src.start();
+    src.stop(ctx.currentTime + 0.28);
+  } catch(e) {}
+}
+
+/* --- Sound: Sparkle tinkle after burst --- */
+function playTinkle(delay = 0) {
+  try {
+    const ctx = getAudioCtx();
+    const freqs = [880, 1100, 1320, 1760, 2200];
+    freqs.forEach((f, i) => {
+      const osc  = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.value = f;
+      const t = ctx.currentTime + delay + i * 0.06;
+      gain.gain.setValueAtTime(0, t);
+      gain.gain.linearRampToValueAtTime(0.09, t + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.35);
+      osc.start(t);
+      osc.stop(t + 0.4);
+    });
+  } catch(e) {}
+}
+
+/* --- Cracker Colors palette (candy-themed) --- */
+const CRACKER_PALETTES = [
+  ['#FF6BB3','#FFD700','#FF8FAB','#fff','#FFB347'],  // pink-gold
+  ['#7FFFFF','#00CFFF','#B5D8F7','#fff','#9B59F5'],  // cyan-blue
+  ['#BFFFA0','#FFD580','#7CDB7C','#fff','#FFB347'],  // green-amber
+  ['#E0C8FF','#FF69B4','#9B59F5','#fff','#FFD700'],  // lavender-magenta
+  ['#FF4500','#FFD700','#FF6347','#fff','#FFA07A'],   // fiery orange
+];
+
+/* --- Particle shapes (emoji + symbols) --- */
+const BURST_SHAPES  = ['★','✦','●','◆','▲','🌸','✿','🍬','💥','✨'];
+
+/* --- Single cracker launch --- */
+function launchCracker(startX) {
+  const layer   = document.getElementById('cracker-layer');
+  const palette = CRACKER_PALETTES[Math.floor(Math.random() * CRACKER_PALETTES.length)];
+  const burstY  = 15 + Math.random() * 35; // % from top where it bursts
+
+  /* 1 — Rocket trail div */
+  const rocket = document.createElement('div');
+  rocket.style.cssText = `
+    position: absolute;
+    left: ${startX}px;
+    bottom: 0;
+    width: 6px; height: 18px;
+    border-radius: 3px 3px 6px 6px;
+    background: linear-gradient(to top, #FFD700, #FF6BB3, transparent);
+    box-shadow: 0 0 10px #FFD700, 0 0 20px #FF6BB3;
+    animation: rocketRise .6s cubic-bezier(.2,.8,.4,1) forwards;
+    z-index: 10000;
+  `;
+  layer.appendChild(rocket);
+
+  playWhoosh();
+
+  /* 2 — After rocket reaches top, create burst */
+  setTimeout(() => {
+    rocket.remove();
+    const bx = startX;
+    const by = window.innerHeight * burstY / 100;
+
+    // Flash ring
+    const ring = document.createElement('div');
+    ring.style.cssText = `
+      position: absolute;
+      left: ${bx}px; top: ${by}px;
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      border: 4px solid ${palette[0]};
+      box-shadow: 0 0 20px ${palette[0]};
+      animation: flashRing .5s ease-out forwards;
+      z-index: 10000;
+    `;
+    layer.appendChild(ring);
+    setTimeout(() => ring.remove(), 550);
+
+    // BANG sound
+    playBang(0.4 + Math.random() * 0.2);
+    // Tinkle after
+    playTinkle(0.12);
+
+    // Burst particles
+    const count = 28 + Math.floor(Math.random() * 16);
+    for (let i = 0; i < count; i++) {
+      const angle   = (360 / count) * i + Math.random() * 8;
+      const speed   = 60 + Math.random() * 110;
+      const rad     = angle * Math.PI / 180;
+      const tx      = Math.cos(rad) * speed;
+      const ty      = Math.sin(rad) * speed + speed * .3; // gravity bias
+      const color   = palette[Math.floor(Math.random() * palette.length)];
+      const shape   = BURST_SHAPES[Math.floor(Math.random() * BURST_SHAPES.length)];
+      const size    = 10 + Math.random() * 14;
+      const dur     = 700 + Math.random() * 600;
+
+      const p = document.createElement('div');
+      p.style.cssText = `
+        position: absolute;
+        left: ${bx}px; top: ${by}px;
+        font-size: ${size}px;
+        color: ${color};
+        text-shadow: 0 0 8px ${color};
+        pointer-events: none;
+        z-index: 10000;
+        --tx: ${tx}px;
+        --ty: ${ty}px;
+        animation: particleBurst ${dur}ms cubic-bezier(.2,.8,.3,1) forwards;
+        line-height: 1;
+        transform-origin: center;
+      `;
+      p.textContent = shape;
+      layer.appendChild(p);
+      setTimeout(() => p.remove(), dur + 50);
+    }
+
+    // Secondary smaller burst (shimmer)
+    setTimeout(() => {
+      const shimCount = 14;
+      for (let i = 0; i < shimCount; i++) {
+        const angle = (360 / shimCount) * i;
+        const speed = 30 + Math.random() * 55;
+        const rad   = angle * Math.PI / 180;
+        const tx    = Math.cos(rad) * speed;
+        const ty    = Math.sin(rad) * speed + 20;
+        const color = '#FFD700';
+
+        const p2 = document.createElement('div');
+        p2.style.cssText = `
+          position: absolute;
+          left: ${bx + (Math.random()*20-10)}px;
+          top:  ${by  + (Math.random()*20-10)}px;
+          font-size: ${8 + Math.random() * 8}px;
+          color: ${color};
+          text-shadow: 0 0 6px ${color};
+          pointer-events: none;
+          z-index: 10000;
+          --tx: ${tx}px;
+          --ty: ${ty}px;
+          animation: particleBurst ${500 + Math.random()*400}ms ease-out forwards;
+          line-height: 1;
+        `;
+        p2.textContent = '✦';
+        layer.appendChild(p2);
+        setTimeout(() => p2.remove(), 950);
+      }
+      playTinkle(0);
+    }, 180);
+
+  }, 580); // timing matches rocketRise duration
+}
+
+/* --- Launch a SALVO of crackers --- */
+function launchSalvo() {
+  const count  = 3 + Math.floor(Math.random() * 4); // 3-6 crackers
+  const spread = window.innerWidth * .7;
+  const left0  = window.innerWidth * .15;
+
+  for (let i = 0; i < count; i++) {
+    const x = left0 + Math.random() * spread;
+    setTimeout(() => launchCracker(x), i * 280 + Math.random() * 120);
+  }
+}
+
+/* --- Button click → salvo --- */
+document.getElementById('cracker-btn').addEventListener('click', () => {
+  launchSalvo();
+});
+
+/* --- Auto-launch on page load after intro (2 salvos) --- */
+setTimeout(() => launchSalvo(), 2200);
+setTimeout(() => launchSalvo(), 4000);
+
+/* --- Auto-launch every 18s for ambient magic --- */
+setInterval(launchSalvo, 18000);
+
+</script>
+</body>
+</html>
